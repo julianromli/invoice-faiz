@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Download, RefreshCcw } from "lucide-react";
+import { Download, RefreshCcw, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -20,6 +20,7 @@ import {
   type RevenueFilters,
 } from "@/lib/analytics";
 import {
+  deleteInvoiceSnapshot,
   type InvoicePaymentStatus,
   setInvoiceStatus,
 } from "@/lib/history";
@@ -115,6 +116,15 @@ const DashboardPage = () => {
 
   const handleStatusUpdate = (id: string, status: InvoicePaymentStatus) => {
     setInvoiceStatus(id, status);
+    refresh();
+  };
+
+  const handleDelete = (id: string) => {
+    const shouldDelete = window.confirm("Are you sure you want to delete this invoice?");
+    if (!shouldDelete) {
+      return;
+    }
+    deleteInvoiceSnapshot(id);
     refresh();
   };
 
@@ -308,13 +318,16 @@ const DashboardPage = () => {
                   <th className="px-4 py-3 font-medium text-neutral-600">
                     Created
                   </th>
+                  <th className="px-4 py-3 text-right font-medium text-neutral-600">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100">
                 {filteredInvoices.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={7}
+                      colSpan={8}
                       className="px-4 py-6 text-center text-neutral-500"
                     >
                       No invoices meet the selected filters yet.
@@ -365,6 +378,16 @@ const DashboardPage = () => {
                       </td>
                       <td className="px-4 py-3 text-neutral-800">
                         {formatDate(invoice.createdAt)}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDelete(invoice.id)}
+                          aria-label="Delete invoice"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </td>
                     </tr>
                   ))

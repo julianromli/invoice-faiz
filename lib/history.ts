@@ -313,3 +313,11 @@ export const setInvoiceStatus = (
   writeHistory(updated);
 };
 
+export const deleteInvoiceSnapshot = (id: string) => {
+  const history = readHistory();
+  const updated = history.filter((snapshot) => snapshot.id !== id);
+  if (updated.length === history.length) {
+    return;
+  }
+  writeHistory(updated);
+};

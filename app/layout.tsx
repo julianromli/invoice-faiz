@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { AppShell } from "@/components/layout/app-shell";
 import { GeistSans } from "geist/font/sans";
 import Script from "next/script";
 
@@ -76,7 +77,12 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#f97316" />
         <meta name="theme-color" content="#f97316" />
       </head>
-      <body className={`${GeistSans.className}`}>{children}</body>
+      <body className={`${GeistSans.className}`}>
+        <AppShell>
+          {children}
+        </AppShell>
+      </body>
     </html>
   );
 }
+
