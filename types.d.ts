@@ -57,3 +57,13 @@ type InvoiceData = PaymentDetails &
   InvoiceItemDetails &
   YourDetails &
   CompanyDetails;
+
+declare module "utif" {
+  export function encodeImage(
+    rgba: Uint8Array,
+    width: number,
+    height: number,
+    components?: number
+  ): Uint8Array;
+}
+
