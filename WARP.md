@@ -181,4 +181,30 @@ Setiap section memiliki 2 versions:
 
 **Status**: ✅ Fixed - Build berhasil tanpa TypeScript errors
 
+### Vercel Deployment URL Issues
+**Issue**: Build error di Vercel "TypeError: Invalid URL" dengan input 'undefined', terutama untuk page `/_not-found`.
+
+**Root Cause**: Environment variable `NEXT_PUBLIC_URL` di `.env.local` atau Vercel environment settings tidak menggunakan format URL yang valid (missing protocol).
+
+**Solution**: 
+1. Update `.env.local` dengan format URL yang proper:
+```bash
+# ❌ Wrong format
+NEXT_PUBLIC_URL="invoice-faiz.vercel.app"
+
+# ✅ Correct format  
+NEXT_PUBLIC_URL="https://invoice-faiz.vercel.app"
+```
+
+2. Set environment variable yang sama di Vercel dashboard:
+   - Go to Vercel project settings > Environment Variables
+   - Add `NEXT_PUBLIC_URL` with value `https://invoice-faiz.vercel.app`
+
+**Technical Context**: 
+- URL digunakan di `app/layout.tsx` untuk `metadataBase: new URL(process.env.NEXT_PUBLIC_URL!)`
+- `new URL()` constructor requires valid URL format dengan protocol
+- Missing protocol menyebabkan "Invalid URL" error saat Next.js build
+
+**Status**: ✅ Fixed - Local build berhasil, perlu update Vercel env vars
+
 Catatan: Project ini designed untuk client-side PDF generation, jadi tidak butuh server infrastructure yang complex.
