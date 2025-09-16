@@ -161,14 +161,16 @@ export const MobileSidebar = ({
   );
 };
 
+type SidebarLinkProps = {
+  link: Links;
+  className?: string;
+} & Omit<LinkProps, "href"> & React.AnchorHTMLAttributes<HTMLAnchorElement>;
+
 export const SidebarLink = ({
   link,
   className,
   ...props
-}: {
-  link: Links;
-  className?: string;
-} & LinkProps) => {
+}: SidebarLinkProps) => {
   const { open, animate } = useSidebar();
   return (
     <Link
@@ -192,5 +194,6 @@ export const SidebarLink = ({
     </Link>
   );
 };
+
 
 

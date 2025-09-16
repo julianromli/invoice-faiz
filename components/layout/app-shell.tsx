@@ -8,9 +8,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import type { ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 
-const navLinks = [
+type NavLinkConfig = {
+  label: string;
+  href: string;
+  icon: ComponentType<{ className?: string }>;
+  external?: boolean;
+};
+
+const navLinks: NavLinkConfig[] = [
   {
     label: "Overview",
     href: "/",
@@ -32,7 +39,7 @@ const navLinks = [
     icon: NotebookPen,
     external: true,
   },
-] as const;
+];
 
 type LinkConfig = (typeof navLinks)[number];
 
@@ -152,3 +159,6 @@ const BrandIcon = () => {
     </Link>
   );
 };
+
+
+
