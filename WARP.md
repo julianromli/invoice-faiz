@@ -157,4 +157,28 @@ Setiap section memiliki 2 versions:
 - Test form state persistence
 - Validate responsive design untuk different screen sizes
 
+## Known Issues & Fixes
+
+### TypeScript Issues dengan Framer Motion
+**Issue**: Framer Motion components (`motion.div`, `motion.span`) tidak properly expose `className` prop di TypeScript definitions, menyebabkan build errors.
+
+**Solution**: Gunakan type assertion pattern untuk bypass TypeScript checking:
+```tsx
+// Instead of:
+<motion.div className={className} />
+
+// Use:
+<motion.div
+  {...({
+    className: className
+  } as any)}
+/>
+```
+
+**Files affected**:
+- `components/ui/sidebar.tsx` (DesktopSidebar, MobileSidebar, SidebarLink)
+- Pattern applicable untuk semua framer-motion components yang butuh className
+
+**Status**: ✅ Fixed - Build berhasil tanpa TypeScript errors
+
 Catatan: Project ini designed untuk client-side PDF generation, jadi tidak butuh server infrastructure yang complex.

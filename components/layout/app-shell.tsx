@@ -63,7 +63,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
     <div className="min-h-screen bg-neutral-50 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-50">
       <div className="flex h-full min-h-screen flex-col md:flex-row">
         <Sidebar open={open} setOpen={setOpen}>
-          <SidebarBody className="justify-between gap-8">
+          <SidebarBody>
             <div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
               {open ? <Brand /> : <BrandIcon />}
               <nav className="mt-8 flex flex-col gap-2">
