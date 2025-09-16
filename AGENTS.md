@@ -38,3 +38,4 @@
 - /dashboard surfaces revenue analytics from local invoice history; metrics & filters are computed client-side via lib/analytics.
 - Clipboard export uses html-to-image + utif; browsers that block TIFF fall back to PNG while keeping download available.
 - Invoice history persists in lib/history with status tracking (paid, pending, overdue) and can be restored via useInvoiceHistory + InvoiceHistoryDialog on the new invoice flow.
+- Invoice breakdown table on /dashboard now supports deleting invoices after confirmation, persisting via deleteInvoiceSnapshot.
