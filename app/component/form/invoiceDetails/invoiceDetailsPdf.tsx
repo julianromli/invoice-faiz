@@ -10,13 +10,20 @@ export const InvoiceDetailsPdf: React.FC<InvoiceItemDetails> = ({
   items,
   currency = "INR",
 }) => {
-  const currencyType = currency;
+  // Ensure safe values for all calculations
+  const safeNote = note || "";
+  const safeDiscount = discount || "0";
+  const safeTaxRate = taxRate || "0";
+  const safeItems = Array.isArray(items) ? items : [];
+  const safeCurrency = currency || "INR";
+  
+  const currencyType = safeCurrency;
   const currencyDetails = currencyList.find(
     (currency) => currency.value.toLowerCase() === currencyType.toLowerCase()
   )?.details;
-  const subtotal = calculateTotalAmount(items);
-  const discountAmount = subtotal - (discount ? +discount : 0);
-  const taxAmount = discountAmount * ((taxRate ? +taxRate : 0) / 100);
+  const subtotal = calculateTotalAmount(safeItems);
+  const discountAmount = subtotal - (safeDiscount ? +safeDiscount : 0);
+  const taxAmount = discountAmount * ((safeTaxRate ? +safeTaxRate : 0) / 100);
   const totalAmount = discountAmount + taxAmount;
 
   return (
@@ -44,7 +51,7 @@ export const InvoiceDetailsPdf: React.FC<InvoiceItemDetails> = ({
           </View>
         </View>
       </View>
-      {items.map(({ itemDescription, amount, qty }, index) => {
+      {safeItems.map(({ itemDescription, amount, qty }, index) => {
         const containerStyle = {
           marginHorizontal: 40,
           paddingVertical: 14,
@@ -93,10 +100,10 @@ export const InvoiceDetailsPdf: React.FC<InvoiceItemDetails> = ({
       })}
       <View style={pdfUtils.flexRowItemCenter}>
         <View style={{ flex: 1, paddingTop: 24 }}>
-          {note && (
+          {safeNote && (
             <View style={{ paddingHorizontal: 40 }}>
               <Text style={pdfTypography.title}>Note</Text>
-              <Text style={pdfTypography.itemDescription}>{note}</Text>
+              <Text style={pdfTypography.itemDescription}>{safeNote}</Text>
             </View>
           )}
         </View>
@@ -123,7 +130,7 @@ export const InvoiceDetailsPdf: React.FC<InvoiceItemDetails> = ({
               {addCommasToNumber(subtotal)}
             </Text>
           </View>
-          {discount && (
+          {safeDiscount && safeDiscount !== "0" && (
             <View
               style={{
                 marginHorizontal: 40,
@@ -143,11 +150,11 @@ export const InvoiceDetailsPdf: React.FC<InvoiceItemDetails> = ({
                 }}
               >
                 {currencyDetails?.currencySymbol}
-                {discount ? addCommasToNumber(+discount) : ""}
+                {safeDiscount ? addCommasToNumber(+safeDiscount) : ""}
               </Text>
             </View>
           )}
-          {taxRate && (
+          {safeTaxRate && safeTaxRate !== "0" && (
             <View
               style={{
                 marginHorizontal: 40,
@@ -157,7 +164,7 @@ export const InvoiceDetailsPdf: React.FC<InvoiceItemDetails> = ({
               }}
             >
               <Text style={{ ...pdfTypography.itemDescription, flex: 1 }}>
-                Tax ({taxRate})%
+                Tax ({safeTaxRate})%
               </Text>
               <Text
                 style={{
@@ -194,12 +201,21 @@ export const InvoiceDetailsPdf: React.FC<InvoiceItemDetails> = ({
   );
 };
 
-const calculateTotalAmount = (items: Item[]): number =>
-  items.reduce((total, item) => {
-    const quantity = item.qty ? +item.qty : 1;
-    const amount = item.amount ? +item.amount : 0;
+const calculateTotalAmount = (items: Item[]): number => {
+  if (!Array.isArray(items) || items.length === 0) {
+    return 0;
+  }
+  
+  return items.reduce((total, item) => {
+    if (!item || typeof item !== 'object') {
+      return total;
+    }
+    
+    const quantity = item.qty && !isNaN(+item.qty) ? +item.qty : 1;
+    const amount = item.amount && !isNaN(+item.amount) ? +item.amount : 0;
     return total + quantity * amount;
   }, 0);
+};
 
 const addCommasToNumber = (number: number): string => {
   let numberString = number.toString();

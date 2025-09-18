@@ -60,10 +60,59 @@ export const DownloadInvoiceButton = () => {
   }, [copyStatus]);
 
   const generatePdfBlob = async () => {
+    // Validate and provide default values for all required props
+    const safeInvoiceDetails = {
+      note: invoiceDetails?.note || "",
+      discount: invoiceDetails?.discount || "",
+      taxRate: invoiceDetails?.taxRate || "",
+      items: Array.isArray(invoiceDetails?.items) ? invoiceDetails.items : [],
+      currency: invoiceDetails?.currency || "INR",
+    };
+
+    const safeCompanyDetails = {
+      email: companyDetails?.email || "",
+      companyName: companyDetails?.companyName || "",
+      companyAddress: companyDetails?.companyAddress || "",
+      companyCity: companyDetails?.companyCity || "",
+      companyState: companyDetails?.companyState || "",
+      companyCountry: companyDetails?.companyCountry || "",
+      companyLogo: companyDetails?.companyLogo || "",
+      companyTaxId: companyDetails?.companyTaxId || "",
+      companyZip: companyDetails?.companyZip || "",
+    };
+
+    const safeYourDetails = {
+      yourEmail: yourDetails?.yourEmail || "",
+      yourName: yourDetails?.yourName || "",
+      yourAddress: yourDetails?.yourAddress || "",
+      yourCity: yourDetails?.yourCity || "",
+      yourState: yourDetails?.yourState || "",
+      yourCountry: yourDetails?.yourCountry || "",
+      yourLogo: yourDetails?.yourLogo || "",
+      yourTaxId: yourDetails?.yourTaxId || "",
+      yourZip: yourDetails?.yourZip || "",
+    };
+
+    const safePaymentDetails = {
+      bankName: paymentDetails?.bankName || "",
+      accountNumber: paymentDetails?.accountNumber || "",
+      accountName: paymentDetails?.accountName || "",
+      routingCode: paymentDetails?.routingCode || "",
+      swiftCode: paymentDetails?.swiftCode || "",
+      ifscCode: paymentDetails?.ifscCode || "",
+      currency: paymentDetails?.currency || safeInvoiceDetails.currency,
+    };
+
+    const safeInvoiceTerms = {
+      invoiceNumber: invoiceTerms?.invoiceNumber || "",
+      issueDate: invoiceTerms?.issueDate || "",
+      dueDate: invoiceTerms?.dueDate || "",
+    };
+
     const currencyDetails = currencyList.find(
       (currencyDetail) =>
         currencyDetail.value.toLowerCase() ===
-        invoiceDetails.currency.toLowerCase()
+        safeInvoiceDetails.currency.toLowerCase()
     )?.details;
 
     const defaultCurrency = currencyList.find(
@@ -84,11 +133,11 @@ export const DownloadInvoiceButton = () => {
       <Document>
         <Page size="A4" style={pdfContainers.page}>
           <PdfDetails
-            companyDetails={companyDetails}
-            invoiceDetails={invoiceDetails}
-            invoiceTerms={invoiceTerms}
-            paymentDetails={paymentDetails}
-            yourDetails={yourDetails}
+            companyDetails={safeCompanyDetails}
+            invoiceDetails={safeInvoiceDetails}
+            invoiceTerms={safeInvoiceTerms}
+            paymentDetails={safePaymentDetails}
+            yourDetails={safeYourDetails}
             countryImageUrl={countryImageUrl}
           />
         </Page>

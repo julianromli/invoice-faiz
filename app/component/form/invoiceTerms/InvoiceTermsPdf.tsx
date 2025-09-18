@@ -7,11 +7,17 @@ export const InvoiceTermsPdf: React.FC<InvoiceTerms> = ({
   invoiceNumber,
   issueDate,
   dueDate,
-}) => (
+}) => {
+  // Ensure safe values for all props
+  const safeInvoiceNumber = invoiceNumber || "";
+  const safeIssueDate = issueDate || "";
+  const safeDueDate = dueDate || "";
+  
+  return (
   <View style={pdfContainers.invoiceTerms}>
     <View style={{ flex: 1 }}>
       <Text style={pdfTypography.title}>Invoice NO</Text>
-      <Text style={pdfTypography.subTitle}>{invoiceNumber}</Text>
+      <Text style={pdfTypography.subTitle}>{safeInvoiceNumber}</Text>
     </View>
     <View
       style={{
@@ -24,15 +30,16 @@ export const InvoiceTermsPdf: React.FC<InvoiceTerms> = ({
       <View>
         <Text style={pdfTypography.title}>Issued</Text>
         <Text style={pdfTypography.subTitle}>
-          {issueDate ? format(issueDate, "do MMM yyyy") : ""}
+          {safeIssueDate ? format(new Date(safeIssueDate), "do MMM yyyy") : ""}
         </Text>
       </View>
       <View>
         <Text style={pdfTypography.title}>Due Date</Text>
         <Text style={pdfTypography.subTitle}>
-          {dueDate ? format(dueDate, "do MMM yyyy") : ""}
+          {safeDueDate ? format(new Date(safeDueDate), "do MMM yyyy") : ""}
         </Text>
       </View>
     </View>
   </View>
 );
+};

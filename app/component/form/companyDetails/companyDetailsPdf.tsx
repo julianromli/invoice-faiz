@@ -14,35 +14,48 @@ export const CompanyDetailsPdf: React.FC<CompanyDetails> = ({
   companyLogo,
   companyTaxId,
   companyZip,
-}) => (
+}) => {
+  // Ensure safe values for all props
+  const safeEmail = email || "";
+  const safeCompanyName = companyName || "";
+  const safeCompanyAddress = companyAddress || "";
+  const safeCompanyCity = companyCity || "";
+  const safeCompanyState = companyState || "";
+  const safeCompanyCountry = companyCountry || "";
+  const safeCompanyLogo = companyLogo || "";
+  const safeCompanyTaxId = companyTaxId || "";
+  const safeCompanyZip = companyZip || "";
+  
+  return (
   <View style={pdfContainers.CompanyDetails}>
     <Text style={{ ...pdfTypography.title, marginBottom: 14 }}>To</Text>
     <View style={pdfContainers.imageContainer}>
-      {companyLogo && (
-        <Image src={companyLogo} style={{ height: 40, borderRadius: 6 }} />
+      {safeCompanyLogo && (
+        <Image src={safeCompanyLogo} style={{ height: 40, borderRadius: 6 }} />
       )}
     </View>
-    {companyName && (
+    {safeCompanyName && (
       <Text style={{ ...pdfTypography.text2xl, flexWrap: "wrap" }}>
-        {companyName}
+        {safeCompanyName}
       </Text>
     )}
-    {email && (
+    {safeEmail && (
       <Text style={{ ...pdfTypography.description, marginBottom: 12 }}>
-        {email}
+        {safeEmail}
       </Text>
     )}
     <View style={pdfTypography.description}>
-      {companyAddress && <Text>{companyAddress}</Text>}
-      {(companyCity || companyState || companyZip) && (
+      {safeCompanyAddress && <Text>{safeCompanyAddress}</Text>}
+      {(safeCompanyCity || safeCompanyState || safeCompanyZip) && (
         <Text style={{ marginBottom: 2 }}>
-          {companyCity}, {companyState} {companyZip}
+          {safeCompanyCity}, {safeCompanyState} {safeCompanyZip}
         </Text>
       )}
-      {companyCountry && (
-        <Text style={{ marginBottom: 4 }}>{companyCountry}</Text>
+      {safeCompanyCountry && (
+        <Text style={{ marginBottom: 4 }}>{safeCompanyCountry}</Text>
       )}
-      {companyTaxId && <Text>Tax ID: {companyTaxId}</Text>}
+      {safeCompanyTaxId && <Text>Tax ID: {safeCompanyTaxId}</Text>}
     </View>
   </View>
 );
+};

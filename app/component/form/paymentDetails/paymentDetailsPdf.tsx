@@ -18,9 +18,19 @@ export const PaymentDetailsPdf: React.FC<PaymentDetailsPdfProps> = ({
   currency = "INR",
   countryImageUrl,
 }) => {
+  // Ensure safe values for all props
+  const safeBankName = bankName || "";
+  const safeAccountNumber = accountNumber || "";
+  const safeAccountName = accountName || "";
+  const safeRoutingCode = routingCode || "";
+  const safeSwiftCode = swiftCode || "";
+  const safeIfscCode = ifscCode || "";
+  const safeCurrency = currency || "INR";
+  const safeCountryImageUrl = countryImageUrl || "";
+  
   const currencyDetails = currencyList.find(
     (currencyDetail) =>
-      currencyDetail.value.toLowerCase() === currency.toLowerCase()
+      currencyDetail.value.toLowerCase() === safeCurrency.toLowerCase()
   )?.details;
 
   return (
@@ -52,7 +62,7 @@ export const PaymentDetailsPdf: React.FC<PaymentDetailsPdfProps> = ({
                 paddingLeft: 44.5,
               }}
             >
-              {bankName ? bankName : "-"}
+              {safeBankName || "-"}
             </Text>
           </View>
           <View style={pdfUtils.flexRowItemCenter}>
@@ -64,7 +74,7 @@ export const PaymentDetailsPdf: React.FC<PaymentDetailsPdfProps> = ({
                 paddingLeft: 14,
               }}
             >
-              {accountNumber ? accountNumber : "-"}
+              {safeAccountNumber || "-"}
             </Text>
           </View>
           <View style={pdfUtils.flexRowItemCenter}>
@@ -76,7 +86,7 @@ export const PaymentDetailsPdf: React.FC<PaymentDetailsPdfProps> = ({
                 paddingLeft: 26,
               }}
             >
-              {accountName ? accountName : "-"}
+              {safeAccountName || "-"}
             </Text>
           </View>
           <View style={pdfUtils.flexRowItemCenter}>
@@ -88,10 +98,10 @@ export const PaymentDetailsPdf: React.FC<PaymentDetailsPdfProps> = ({
                 paddingLeft: 45,
               }}
             >
-              {swiftCode ? swiftCode : "-"}
+              {safeSwiftCode || "-"}
             </Text>
           </View>
-          {ifscCode ? (
+          {safeIfscCode && (
             <View style={pdfUtils.flexRowItemCenter}>
               <Text style={pdfTypography.paymentTitle}>IFSC Code</Text>
               <Text
@@ -101,11 +111,11 @@ export const PaymentDetailsPdf: React.FC<PaymentDetailsPdfProps> = ({
                   paddingLeft: 48,
                 }}
               >
-                {ifscCode}
+                {safeIfscCode}
               </Text>
             </View>
-          ) : undefined}
-          {routingCode ? (
+          )}
+          {safeRoutingCode && (
             <View style={pdfUtils.flexRowItemCenter}>
               <Text style={pdfTypography.paymentTitle}>Routing Code</Text>
               <Text
@@ -115,10 +125,10 @@ export const PaymentDetailsPdf: React.FC<PaymentDetailsPdfProps> = ({
                   paddingLeft: 32,
                 }}
               >
-                {routingCode}
+                {safeRoutingCode}
               </Text>
             </View>
-          ) : undefined}
+          )}
         </View>
       </View>
       <View
@@ -133,16 +143,15 @@ export const PaymentDetailsPdf: React.FC<PaymentDetailsPdfProps> = ({
         <Text style={{ ...pdfTypography.title, paddingBottom: 12 }}>
           Payable in
         </Text>
-        {currencyDetails && (
+        {currencyDetails && safeCountryImageUrl && (
           <View style={{ ...pdfUtils.flexRowItemCenter, gap: 8 }}>
             <Image
-              src={countryImageUrl}
+              src={safeCountryImageUrl}
               style={{
                 width: 30,
                 height: 30,
                 flexShrink: 0,
-                borderRadius: "100%",
-                objectFit: "cover",
+                borderRadius: 15,
               }}
             />
             <View>

@@ -16,30 +16,43 @@ export const YourDetailsPDF: React.FC<YourDetails> = ({
   yourLogo,
   yourTaxId,
   yourZip,
-}) => (
+}) => {
+  // Ensure safe values for all props
+  const safeYourEmail = yourEmail || "";
+  const safeYourName = yourName || "";
+  const safeYourAddress = yourAddress || "";
+  const safeYourCity = yourCity || "";
+  const safeYourState = yourState || "";
+  const safeYourCountry = yourCountry || "";
+  const safeYourLogo = yourLogo || "";
+  const safeYourTaxId = yourTaxId || "";
+  const safeYourZip = yourZip || "";
+  
+  return (
   <View style={pdfContainers.YourDetails}>
     <Text style={{ ...pdfTypography.title, marginBottom: 14 }}>From</Text>
 
     <View style={pdfContainers.imageContainer}>
-      {yourLogo && (
-        <Image style={{ height: 40, borderRadius: 6 }} src={yourLogo} />
+      {safeYourLogo && (
+        <Image style={{ height: 40, borderRadius: 6 }} src={safeYourLogo} />
       )}
     </View>
-    {yourName && <Text style={pdfTypography.text2xl}>{yourName}</Text>}
-    {yourEmail && (
+    {safeYourName && <Text style={pdfTypography.text2xl}>{safeYourName}</Text>}
+    {safeYourEmail && (
       <Text style={{ ...pdfTypography.description, marginBottom: 12 }}>
-        {yourEmail}
+        {safeYourEmail}
       </Text>
     )}
     <View style={pdfTypography.description}>
-      {yourAddress && <Text>{yourAddress}</Text>}
-      {(yourCity || yourState || yourZip) && (
+      {safeYourAddress && <Text>{safeYourAddress}</Text>}
+      {(safeYourCity || safeYourState || safeYourZip) && (
         <Text style={{ marginBottom: 2 }}>
-          {yourCity}, {yourState} {yourZip}
+          {safeYourCity}, {safeYourState} {safeYourZip}
         </Text>
       )}
-      {yourCountry && <Text style={{ marginBottom: 4 }}>{yourCountry}</Text>}
-      {yourTaxId && <Text>Tax ID:{yourTaxId}</Text>}
+      {safeYourCountry && <Text style={{ marginBottom: 4 }}>{safeYourCountry}</Text>}
+      {safeYourTaxId && <Text>Tax ID: {safeYourTaxId}</Text>}
     </View>
   </View>
 );
+};

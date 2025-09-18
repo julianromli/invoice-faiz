@@ -184,6 +184,29 @@ NEXT_PUBLIC_URL="https://invoice-faiz.vercel.app"
 
 **Status**: ✅ Fixed - Local build berhasil, perlu update Vercel env vars
 
+### PDF Download Invoice Issues (RESOLVED)
+**Problem**: Error `Cannot read properties of undefined (reading 'hasOwnProperty')` dan `Invalid border radius: 100%` saat download PDF.
+
+**Root Cause**: 
+1. Props undefined/null dikirim ke React PDF components
+2. React PDF tidak support CSS percentage values untuk borderRadius
+3. Unsupported CSS properties seperti `objectFit: "cover"`
+
+**Solution**: 
+1. **Props Validation**: Comprehensive validation di `generatePdfBlob()` dengan safe defaults untuk semua props
+2. **React PDF Compatibility**: 
+   - Ganti `borderRadius: "100%"` → `borderRadius: 15` (nilai absolut)
+   - Remove `objectFit: "cover"` property
+   - Pastikan semua array props di-validate dengan `Array.isArray()`
+
+**Files Fixed**:
+- `downloadInvoice/downloadInvoiceButton.tsx`: Enhanced props validation
+- All `*Pdf.tsx` components: Safe value handling dengan fallbacks
+- `invoiceDetails/invoiceDetailsPdf.tsx`: Improved `calculateTotalAmount` function
+- `paymentDetails/paymentDetailsPdf.tsx`: Fixed borderRadius dan objectFit
+
+**Status**: ✅ Fixed - Download PDF berfungsi tanpa perlu mengisi data apapun
+
 ### PDF Styling Constraints
 **Problem**: React-PDF memiliki styling limitations yang berbeda dari regular React.
 
@@ -192,6 +215,7 @@ NEXT_PUBLIC_URL="https://invoice-faiz.vercel.app"
 - Convert semua images ke base64 atau public URLs
 - Test PDF output secara terpisah dari preview components
 - Tidak bisa pakai CSS classes di PDF components
+- **CRITICAL**: Gunakan nilai absolut untuk borderRadius, bukan percentage
 
 ## Testing approach
 
